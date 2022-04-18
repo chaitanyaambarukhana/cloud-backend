@@ -59,7 +59,11 @@ def upload_image():
 @app.route('/contacts', methods=['POST'], cors=True)
 def save_contact():
     """saves contact information to the contact store service"""
-    request_data = json.loads(app.current_request.raw_body.lower())
+    try:
+        request_data = json.loads(app.current_request.raw_body.lower())
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
 
     contact_id = "contact_" + str(uuid.uuid1())
 
@@ -78,7 +82,11 @@ def save_contact():
 
 @app.route('/contacts/find', methods=['POST'], cors=True)
 def get_all_contacts():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
     name = request_data["name"].lower()
     """gets all saved contacts in the contact store service"""
     #name= "GRILL CHRIS SALCEDO"
@@ -90,7 +98,11 @@ def get_all_contacts():
 
 @app.route("/get-contact", methods=["POST"], cors=True)
 def get_contact():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
 
     contact_id = request_data["contact_id"]
 
@@ -103,7 +115,11 @@ def get_contact():
 
 @app.route("/get-user-contacts", methods=["POST"], cors=True)
 def get_user_contacts():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
     user_id = request_data["user_id"]
 
     user_contacts = user_service.get_user_contacts(user_id)
@@ -113,7 +129,11 @@ def get_user_contacts():
 
 @app.route("/register", methods=["POST"], cors=True)
 def registration():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
     try:
         firstname = request_data["firstname"].lower()
         email = request_data["email"].lower()
@@ -142,7 +162,11 @@ def registration():
 
 @app.route("/login", methods=["POST"], cors=True)
 def login():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
 
     try:
         email = request_data["email"].lower()
@@ -165,7 +189,11 @@ def login():
 
 @app.route("/get-all-data", methods=["POST"])
 def get_all_data():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
     user = user_service.get_user_id(request_data["user_id"])[0]
     if user["role"] == "admin":
         response = user_service.get_all_data()
@@ -176,7 +204,11 @@ def get_all_data():
 
 @app.route("/delete-contact", methods=['DELETE'], cors=True)
 def delete_contact():
-    request_data = json.loads(app.current_request.raw_body)
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
     contact_id = request_data["contact_id"]
     response = user_service.delete_contact(contact_id)
     return response
