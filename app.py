@@ -1,4 +1,4 @@
-from crypt import methods
+
 from chalice import Chalice
 from chalicelib import recognition_service
 from chalicelib import extraction_service
