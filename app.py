@@ -58,9 +58,15 @@ def save_contact():
     """saves contact information to the contact store service"""
     request_data = json.loads(app.current_request.raw_body.lower())
 
-    contact = contact_store.save_contact(request_data)
+    for i in request_data.keys():
+        if type(request_data[i]) is list:
+            request_data[i] = [j.lower() for j in request_data[i]]
+        else:
+            request_data[i] = request_data[i].lower()
 
-    return contact
+    # contact = contact_store.save_contact(request_data)
+
+    return request_data
 
 
 @app.route('/contacts/{name}', methods=['GET'], cors=True)
