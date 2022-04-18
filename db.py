@@ -40,5 +40,14 @@ def get_user(email:str):
         logging.error(ce)
         return "User cannot be found"
 
+
+def get_contact(contact_id):
+    table = connect_db("users")
+    
+    try:
+        contact = table.scan(FilterExpression = Attr("contact_id").eq(contact_id))["Items"]
+        return contact
+    except:
+        return "Contact Doesnot exist"
     
     

@@ -58,18 +58,22 @@ def save_contact():
     """saves contact information to the contact store service"""
     request_data = json.loads(app.current_request.raw_body.lower())
 
+    contact_id = "contact_" + str(uuid.uuid1())
+
+    request_data["contact_id"] = contact_id
+
     for i in request_data.keys():
         if type(request_data[i]) is list:
             request_data[i] = [j.lower() for j in request_data[i]]
         else:
             request_data[i] = request_data[i].lower()
 
-    # contact = contact_store.save_contact(request_data)
+    contact = contact_store.save_contact(request_data)
 
     return request_data
 
 
-@app.route('/contacts/find', methods=['GET'], cors=True)
+@app.route('/contacts/find', methods=['POST'], cors=True)
 def get_all_contacts():
     request_data = json.loads(app.current_request.raw_body)
     name = request_data["name"].lower()
@@ -77,6 +81,17 @@ def get_all_contacts():
     #name= "GRILL CHRIS SALCEDO"
     contacts = contact_store.get_contact_by_name(name)
     return contacts
+
+
+@app.route("/get-contact", methods=["POST"], cors=True):
+def get_contact():
+    request_data = json.loads(app.current_request.raw_body)
+
+    contact_id = request_data["contac_id"]
+
+    contact = db.get_contact(contact_id)
+
+    return contact
 
 
 @app.route("/register", methods=["POST"], cors=True)
