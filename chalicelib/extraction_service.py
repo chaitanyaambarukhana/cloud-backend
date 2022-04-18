@@ -27,8 +27,9 @@ class ExtractionService:
         response = self.comprehend_med.detect_phi(
             Text=contact_string
         )
+        if len(name_comprehend) > 1:
+            contact_info["title"].append(name_comprehend[-1])
 
-        contact_info["title"].append(name_comprehend[-1])
         for entity in response['Entities']:
             if entity['Type'] == 'EMAIL':
                 contact_info['email'].append(entity['Text'])
