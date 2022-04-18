@@ -34,10 +34,11 @@ def get_user(email:str):
     try:
         user = table.scan(
             FilterExpression = Attr("email").eq(email)
-        )["Items"][0]
+        )["Items"]
+        return user
     except ClientError as ce:
         logging.error(ce)
         return "User cannot be found"
 
-    return user
+    
     

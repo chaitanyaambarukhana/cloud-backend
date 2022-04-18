@@ -24,7 +24,7 @@ app.debug = True
 #####
 recognition_service = recognition_service.RecognitionService()
 extraction_service = extraction_service.ExtractionService()
-store_location = 'Contacts'
+store_location = 'contacts'
 contact_store = contact_store.ContactStore(store_location)
 
 
@@ -110,10 +110,14 @@ def login():
 
     user = db.get_user(email)
 
-    if passowrd_given != user["password"]:
-        return "Please provide correct password"
+    if len(user) == 0:
+        return "Please register and then try logging in. "
     else:
-        return {"user_id": user["id"], "message": "Login Success"}
+        user = user[0]
+        if passowrd_given != user["password"]:
+            return "Please provide correct password"
+        else:
+            return {"user_id": user["id"], "message": "Login Success", "user_firstname": user["firstname"]}
 
 
 @app.route("/sample", methods=["POST"], cors=True)
