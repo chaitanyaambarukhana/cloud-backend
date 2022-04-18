@@ -81,3 +81,12 @@ def get_user_contacts(user_id):
         return contacts
     except:
         return "Something went wrong. "
+
+
+def delete_contact(contact_id):
+
+    table = connect_db("contacts")
+
+    response = table.delete_item(Key={"contact_id": contact_id})
+
+    return response

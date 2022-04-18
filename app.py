@@ -171,6 +171,14 @@ def get_all_data():
         return "Requires user privilige"
 
 
+@app.route("/delete-contact", methods=['DELETE'], cors=True)
+def delete_contact():
+    request_data = json.loads(app.current_request.raw_body)
+    contact_id = request_data["contact_id"]
+    response = db.delete_contact(contact_id)
+    return response
+
+
 @app.route("/sample", methods=["POST"], cors=True)
 def sample():
 
