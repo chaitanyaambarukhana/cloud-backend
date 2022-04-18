@@ -5,8 +5,8 @@ import usaddress
 
 class ExtractionService:
     def __init__(self):
-        self.comprehend = boto3.client('comprehend', "us-east-1")
-        self.comprehend_med = boto3.client('comprehendmedical', "us-easst-1")
+        self.comprehend = boto3.client('comprehend')
+        self.comprehend_med = boto3.client('comprehendmedical')
 
     def extract_contact_info(self, contact_string):
         contact_info = defaultdict(list)
