@@ -6,7 +6,7 @@ from boto3.dynamodb.conditions import Attr
 
 def connect_db(tablename: str):
     try:
-        client = aws.resource("dynamodb").Table(tablename)
+        client = aws.resource("dynamodb","ca-central-1").Table(tablename)
     except ClientError as ce:
         return ce
 
