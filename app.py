@@ -72,7 +72,7 @@ def save_contact():
 @app.route('/contacts/find', methods=['GET'], cors=True)
 def get_all_contacts():
     request_data = json.loads(app.current_request.raw_body)
-    name = request_data["name"]
+    name = request_data["name"].lower()
     """gets all saved contacts in the contact store service"""
     #name= "GRILL CHRIS SALCEDO"
     contacts = contact_store.get_contact_by_name(name)
