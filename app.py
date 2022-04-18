@@ -87,7 +87,7 @@ def get_all_contacts():
 def get_contact():
     request_data = json.loads(app.current_request.raw_body)
 
-    contact_id = request_data["contac_id"]
+    contact_id = request_data["contact_id"]
 
     contact = db.get_contact(contact_id)
 

@@ -42,10 +42,10 @@ def get_user(email:str):
 
 
 def get_contact(contact_id):
-    table = connect_db("users")
+    table = connect_db("contacts")
     
     try:
-        contact = table.scan(FilterExpression = Attr("contact_id").eq(contact_id))["Items"]
+        contact = table.scan(FilterExpression = Attr("contact_id").contains(contact_id))
         return contact
     except:
         return "Contact Doesnot exist"
