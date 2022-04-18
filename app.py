@@ -157,10 +157,10 @@ def login():
         if passowrd_given != user["password"]:
             return "Please provide correct password"
         else:
-            return {"user_id": user["id"], "message": "Login Success", "user_firstname": user["firstname"]}
+            return {"user_id": user["id"],"role":user['role'], "message": "Login Success", "user_firstname": user["firstname"]}
 
 
-@app.route("/get-all-data", methods=["POST"])
+@app.route("/get-all-data", methods=["POST"],cors=True)
 def get_all_data():
     request_data = json.loads(app.current_request.raw_body)
     user = db.get_user_id(request_data["user_id"])[0]
