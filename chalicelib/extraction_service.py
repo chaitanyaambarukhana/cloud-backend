@@ -1,7 +1,8 @@
 import boto3
 from collections import defaultdict
 import usaddress
-
+from botocore.exceptions import ClientError
+import logging
 
 class ExtractionService:
     def __init__(self):
@@ -12,10 +13,14 @@ class ExtractionService:
         contact_info = defaultdict(list)
 
         # extract info with comprehend
-        response_comprehend = self.comprehend.detect_entities(
+        try:
+            response_comprehend = self.comprehend.detect_entities(
             Text=contact_string,
             LanguageCode='en'
         )
+        except ClientError as ce:
+            logging.error(ce)
+            return "Error detecting entities from Comprehend"
         name_comprehend = []
         for entity in response_comprehend['Entities']:
             if entity['Type'] == 'PERSON':
@@ -24,9 +29,13 @@ class ExtractionService:
                 contact_info['organization'].append(entity['Text'])
 
         # extract info with comprehend medical
-        response = self.comprehend_med.detect_phi(
+        try:
+            response = self.comprehend_med.detect_phi(
             Text=contact_string
         )
+        except ClientError as ce:
+            logging.error(ce)
+            return "Error detecting entities from Medical Comprehend"
         if len(name_comprehend) > 1:
             contact_info["title"].append(name_comprehend[-1])
 
@@ -43,7 +52,11 @@ class ExtractionService:
 
         # additional processing for address
         address_string = ' '.join(contact_info['address'])
-        address_parts = usaddress.parse(address_string)
+        try:
+            address_parts = usaddress.parse(address_string)
+        except ClientError as ce:
+            logging.error(ce)
+            return "Error in parsing address"
 
         for part in address_parts:
             if part[1] == 'PlaceName':

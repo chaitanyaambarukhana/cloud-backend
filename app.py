@@ -10,7 +10,8 @@ import base64
 import json
 import uuid
 
-
+from botocore.exceptions import ClientError
+import logging
 #####
 # chalice app configuration
 #####
@@ -33,9 +34,14 @@ contact_store = contact_store.ContactStore(store_location)
 def upload_image():
     """processes file upload and saves file to storage service"""
     MIN_CONFIDENCE = 70.0
-    request_data = json.loads(app.current_request.raw_body)
-    file_name = request_data['filename']
-    file_bytes = base64.b64decode(request_data['filebytes'])
+    
+    try:
+        request_data = json.loads(app.current_request.raw_body)
+            #file_name = request_data['filename']
+        file_bytes = base64.b64decode(request_data['filebytes'])
+    except ClientError as ce:
+            logging.error(ce)
+            return "Bad Request"
 
     text_lines = recognition_service.detect_text(file_bytes)
 
@@ -49,7 +55,6 @@ def upload_image():
     contact_info = extraction_service.extract_contact_info(contact_string)
 
     return contact_info
-
 
 @app.route('/contacts', methods=['POST'], cors=True)
 def save_contact():
