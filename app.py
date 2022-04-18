@@ -83,7 +83,7 @@ def get_all_contacts():
     return contacts
 
 
-@app.route("/get-contact", methods=["POST"], cors=True):
+@app.route("/get-contact", methods=["POST"], cors=True)
 def get_contact():
     request_data = json.loads(app.current_request.raw_body)
 
