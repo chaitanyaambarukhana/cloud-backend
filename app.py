@@ -82,6 +82,8 @@ def get_all_contacts():
     contacts = contact_store.get_contact_by_name(name)
     return contacts
 
+# get contacts by id
+
 
 @app.route("/get-contact", methods=["POST"], cors=True)
 def get_contact():
@@ -92,6 +94,18 @@ def get_contact():
     contact = db.get_contact(contact_id)
 
     return contact
+
+# get contacts by user
+
+
+@app.route("/get-user-contacts", methods=["POST"], cors=True)
+def get_user_contacts():
+    request_data = json.loads(app.current_request.raw_body)
+    user_id = request_data["user_id"]
+
+    user_contacts = db.get_user_contacts(user_id)
+
+    return user_contacts
 
 
 @app.route("/register", methods=["POST"], cors=True)

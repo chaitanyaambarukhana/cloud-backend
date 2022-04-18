@@ -6,7 +6,7 @@ from boto3.dynamodb.conditions import Attr
 
 def connect_db(tablename: str):
     try:
-        client = aws.resource("dynamodb","ca-central-1").Table(tablename)
+        client = aws.resource("dynamodb", "ca-central-1").Table(tablename)
     except ClientError as ce:
         return ce
 
@@ -29,11 +29,11 @@ def add_user(user):
     return response
 
 
-def get_user(email:str):
+def get_user(email: str):
     table = connect_db("users")
     try:
         user = table.scan(
-            FilterExpression = Attr("email").eq(email)
+            FilterExpression=Attr("email").eq(email)
         )["Items"]
         return user
     except ClientError as ce:
@@ -41,13 +41,24 @@ def get_user(email:str):
         return "User cannot be found"
 
 
+# get contacts by id
 def get_contact(contact_id):
     table = connect_db("contacts")
-    
+
     try:
-        contact = table.scan(FilterExpression = Attr("contact_id").contains(contact_id))
+        contact = table.scan(FilterExpression=Attr(
+            "contact_id").contains(contact_id))
         return contact
     except:
         return "Contact Doesnot exist"
-    
-    
+
+
+def get_user_contacts(user_id):
+    table = connect_db("contacts")
+
+    try:
+        contacts = table.scan(FilterExpression=Attr(
+            "user_id").contains(user_id))["Items"]
+        return contacts
+    except:
+        return "Something went wrong. "
