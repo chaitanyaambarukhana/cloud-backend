@@ -4,7 +4,7 @@ from chalicelib import recognition_service
 from chalicelib import extraction_service
 from chalicelib import contact_store
 
-import db
+import chalicelib.user_service as user_service
 
 import base64
 import json
@@ -89,7 +89,7 @@ def get_contact():
 
     contact_id = request_data["contact_id"]
 
-    contact = db.get_contact(contact_id)
+    contact = user_service.get_contact(contact_id)
 
     return contact
 
@@ -101,7 +101,7 @@ def get_user_contacts():
     request_data = json.loads(app.current_request.raw_body)
     user_id = request_data["user_id"]
 
-    user_contacts = db.get_user_contacts(user_id)
+    user_contacts = user_service.get_user_contacts(user_id)
 
     return user_contacts
 
@@ -130,7 +130,7 @@ def registration():
         "password": password,
         "role": role
     }
-    response = db.add_user(user)
+    response = user_service.add_user(user)
 
     return response
 
@@ -146,7 +146,7 @@ def login():
     except:
         return "Please provide all the fields."
 
-    user = db.get_user(email)
+    user = user_service.get_user(email)
 
     if len(user) == 0:
         return "Please register and then try logging in. "
@@ -161,9 +161,9 @@ def login():
 @app.route("/get-all-data", methods=["POST"])
 def get_all_data():
     request_data = json.loads(app.current_request.raw_body)
-    user = db.get_user_id(request_data["user_id"])[0]
+    user = user_service.get_user_id(request_data["user_id"])[0]
     if user["role"] == "admin":
-        response = db.get_all_data()
+        response = user_service.get_all_data()
         return response["Items"]
     else:
         return "Requires Admin privilige"
@@ -173,7 +173,7 @@ def get_all_data():
 def delete_contact():
     request_data = json.loads(app.current_request.raw_body)
     contact_id = request_data["contact_id"]
-    response = db.delete_contact(contact_id)
+    response = user_service.delete_contact(contact_id)
     return response
 
 
