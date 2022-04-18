@@ -75,9 +75,9 @@ def get_all_contacts(name):
 def registration():
     request_data = json.loads(app.current_request.raw_body)
     try:
-        firstname = request_data["firstname"]
-        email = request_data["email"]
-        lastname = request_data["lastname"]
+        firstname = request_data["firstname"].lower()
+        email = request_data["email"].lower()
+        lastname = request_data["lastname"].lower()
         password = request_data["password"]
 
     except:
@@ -102,7 +102,7 @@ def login():
     request_data = json.loads(app.current_request.raw_body)
 
     try:
-        email = request_data["email"]
+        email = request_data["email"].lower()
         passowrd_given = request_data["password"]
 
     except:
@@ -116,6 +116,7 @@ def login():
         return {"user_id": user["id"], "message": "Login Success"}
 
 
-@app.route("/sample", methods=["GET"], cors=True)
+@app.route("/sample", methods=["POST"], cors=True)
 def sample():
-    return "Hello"
+
+    return
