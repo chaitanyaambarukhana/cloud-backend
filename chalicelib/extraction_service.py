@@ -12,29 +12,31 @@ class ExtractionService:
         contact_info = defaultdict(list)
 
         # extract info with comprehend
-        response = self.comprehend.detect_entities(
-            Text = contact_string,
-            LanguageCode = 'en'
+        response_comprehend = self.comprehend.detect_entities(
+            Text=contact_string,
+            LanguageCode='en'
         )
-
-        for entity in response['Entities']:
+        name_comprehend = []
+        for entity in response_comprehend['Entities']:
             if entity['Type'] == 'PERSON':
-                contact_info['name'].append(entity['Text'])
+                name_comprehend.append(entity['Text'])
             elif entity['Type'] == 'ORGANIZATION':
                 contact_info['organization'].append(entity['Text'])
 
         # extract info with comprehend medical
         response = self.comprehend_med.detect_phi(
-            Text = contact_string
+            Text=contact_string
         )
 
+        contact_info["title"].append(name_comprehend[-1])
         for entity in response['Entities']:
             if entity['Type'] == 'EMAIL':
                 contact_info['email'].append(entity['Text'])
             elif entity['Type'] == 'PHONE_OR_FAX':
                 contact_info['phone'].append(entity['Text'])
-            elif entity['Type'] == 'PROFESSION':
-                contact_info['title'].append(entity['Text'])
+            elif entity['Type'] == 'NAME':
+                contact_info['name'].append(entity['Text'])
+
             elif entity['Type'] == 'ADDRESS':
                 contact_info['address'].append(entity['Text'])
 

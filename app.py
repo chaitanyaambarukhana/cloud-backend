@@ -56,7 +56,7 @@ def upload_image():
 @app.route('/contacts', methods=['POST'], cors=True)
 def save_contact():
     """saves contact information to the contact store service"""
-    request_data = json.loads(app.current_request.raw_body)
+    request_data = json.loads(app.current_request.raw_body.lower())
 
     contact = contact_store.save_contact(request_data)
 
