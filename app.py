@@ -116,6 +116,8 @@ def registration():
         email = request_data["email"].lower()
         lastname = request_data["lastname"].lower()
         password = request_data["password"]
+        if "role" not in request_data["role"]:
+            role = "user"
 
     except:
         return "Some fields are missing. Please enter all the required fields."
@@ -127,7 +129,8 @@ def registration():
         "firstname": firstname,
         "email": email,
         "lastname": lastname,
-        "password": password
+        "password": password,
+        "role": role
     }
     response = db.add_user(user)
 
@@ -155,6 +158,17 @@ def login():
             return "Please provide correct password"
         else:
             return {"user_id": user["id"], "message": "Login Success", "user_firstname": user["firstname"]}
+
+
+@app.route("/get-all-data", methods=["POST"])
+def get_all_data():
+    request_data = json.loads(app.current_request.raw_body)
+    user = db.get_user_id(request_data["user_id"])[0]
+    if user["role"] == "admin":
+        response = db.get_all_data()
+        return response["Items"]
+    else:
+        return "Requires user privilige"
 
 
 @app.route("/sample", methods=["POST"], cors=True)
