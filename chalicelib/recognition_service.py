@@ -3,11 +3,11 @@ import boto3
 
 class RecognitionService:
     def __init__(self):
-        self.client = boto3.client('rekognition')
+        self.client = boto3.client('rekognition', 'us-east-1')
 
     def detect_text(self, file_bytes):
         response = self.client.detect_text(
-            Image = {
+            Image={
                 'Bytes': file_bytes
             }
         )

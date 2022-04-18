@@ -2,3 +2,5 @@
 .chalice/venv/
 
 __pycache__
+
+venv

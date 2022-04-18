@@ -1,7 +1,5 @@
 from crypt import methods
 from chalice import Chalice
-from inquirer import password
-from matplotlib.pyplot import connect
 from chalicelib import recognition_service
 from chalicelib import extraction_service
 from chalicelib import contact_store
@@ -168,7 +166,7 @@ def get_all_data():
         response = db.get_all_data()
         return response["Items"]
     else:
-        return "Requires user privilige"
+        return "Requires Admin privilige"
 
 
 @app.route("/delete-contact", methods=['DELETE'], cors=True)
@@ -179,7 +177,7 @@ def delete_contact():
     return response
 
 
-@app.route("/sample", methods=["POST"], cors=True)
-def sample():
+# @app.route("/sample", methods=["POST"], cors=True)
+# def sample():
 
-    return
+#     return
