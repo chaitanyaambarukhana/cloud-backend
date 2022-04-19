@@ -56,9 +56,9 @@ def save_contact():
     """saves contact information to the contact store service"""
     request_data = json.loads(app.current_request.raw_body.lower())
 
-    contact_id = "contact_" + str(uuid.uuid1())
-
-    request_data["contact_id"] = contact_id
+    if "contact_id" not in request_data.keys():
+        contact_id = "contact_" + str(uuid.uuid1())
+        request_data["contact_id"] = contact_id
 
     for i in request_data.keys():
         if type(request_data[i]) is list:
