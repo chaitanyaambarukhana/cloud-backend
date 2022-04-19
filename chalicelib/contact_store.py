@@ -2,6 +2,8 @@ import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 import logging
+
+
 class ContactStore:
     def __init__(self, store_location):
         self.table = boto3.resource(
@@ -13,9 +15,9 @@ class ContactStore:
             # should return values from dynamodb however,
             # dynamodb does not support ReturnValues = ALL_NEW
             return contact_info
-        except ClientError as ce:
-            logging.error(ce)
-            return "Error inserting to Collection"
+        except Exception as e:
+            logging.error(e)
+            return "Error adding item to the database"
 
     def get_all_contacts(self):
         try:
@@ -23,7 +25,6 @@ class ContactStore:
         except ClientError as ce:
             logging.error(ce)
             return "Error Retrieving from Collection"
-            
 
         contact_info_list = []
         for item in response['Items']:
@@ -34,12 +35,11 @@ class ContactStore:
     def get_contact_by_name(self, name):
         try:
             response = self.table.scan(
-            FilterExpression=Attr("name").contains(name)
-        )
-        except ClientError as ce:
-            logging.error(ce)
+                FilterExpression=Attr("name").contains(name)
+            )
+        except Exception as e:
+            logging.error(e)
             return "Error Retrieving from Collection"
-
 
         if 'Items' in response:
             contact_info = response['Items']

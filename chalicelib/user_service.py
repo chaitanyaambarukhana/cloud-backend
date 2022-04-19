@@ -7,8 +7,14 @@ from boto3.dynamodb.conditions import Attr
 def connect_db(tablename: str):
     try:
         client = aws.resource("dynamodb", "ca-central-1").Table(tablename)
-    except ClientError as ce:
-        return ce
+    except Exception as e:
+        error = e.__class__.__name__
+        if error == "AccessDeniedException":
+            logging.error(e)
+            return "You are not authorized to use this service. Please check logs for details"
+        else:
+            logging.error(e)
+            return "Error in connecting to dynamodb. Please check logs for more details."
 
     return client
 

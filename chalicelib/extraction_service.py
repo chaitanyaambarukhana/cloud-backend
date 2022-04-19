@@ -7,8 +7,17 @@ import logging
 
 class ExtractionService:
     def __init__(self):
-        self.comprehend = boto3.client('comprehend')
-        self.comprehend_med = boto3.client('comprehendmedical')
+        try:
+            self.comprehend = boto3.client('comprehend')
+            self.comprehend_med = boto3.client('comprehendmedical')
+        except Exception as e:
+            error = e.__class__.__name__
+            if error == "AccessDeniedException":
+                logging.error(e)
+                return "You are not authorized to use the service. Plase check logs for more details"
+            else:
+                logging.error(e)
+                return "Something went worn with connecting to AWS service. Please check logs for more info."
 
     def extract_contact_info(self, contact_string):
         contact_info = defaultdict(list)
@@ -19,9 +28,20 @@ class ExtractionService:
                 Text=contact_string,
                 LanguageCode='en'
             )
-        except ClientError as ce:
-            logging.error(ce)
-            return "Error detecting entities from Comprehend"
+        except Exception as e:
+            if e.__class__.__name__ == "AccessDeniedException":
+                logging.error(e)
+                return "No Access with current credentials."
+            elif e.__class__.__name__ == "InvalidRequestException":
+                logging.error(e)
+                return "Please give a valid request"
+            elif e.__class__.__name__ == "TextSizeLimitExceededException":
+                logging.error(e)
+                return "Text size limit is exceeded. Please enter smaller text size"
+            else:
+                logging.error(e)
+                return "Something went wrong.Look for the logs for more details."
+
         name_comprehend = []
         for entity in response_comprehend['Entities']:
             if entity['Type'] == 'PERSON':
