@@ -4,6 +4,7 @@ import usaddress
 from botocore.exceptions import ClientError
 import logging
 
+
 class ExtractionService:
     def __init__(self):
         self.comprehend = boto3.client('comprehend')
@@ -15,9 +16,9 @@ class ExtractionService:
         # extract info with comprehend
         try:
             response_comprehend = self.comprehend.detect_entities(
-            Text=contact_string,
-            LanguageCode='en'
-        )
+                Text=contact_string,
+                LanguageCode='en'
+            )
         except ClientError as ce:
             logging.error(ce)
             return "Error detecting entities from Comprehend"
@@ -31,13 +32,11 @@ class ExtractionService:
         # extract info with comprehend medical
         try:
             response = self.comprehend_med.detect_phi(
-            Text=contact_string
-        )
+                Text=contact_string
+            )
         except ClientError as ce:
             logging.error(ce)
             return "Error detecting entities from Medical Comprehend"
-        if len(name_comprehend) > 1:
-            contact_info["title"].append(name_comprehend[-1])
 
         for entity in response['Entities']:
             if entity['Type'] == 'EMAIL':
@@ -46,6 +45,8 @@ class ExtractionService:
                 contact_info['phone'].append(entity['Text'])
             elif entity['Type'] == 'NAME':
                 contact_info['name'].append(entity['Text'])
+            elif entity['Type'] == 'PROFESSION':
+                contact_info['title'].append(entity['Text'])
 
             elif entity['Type'] == 'ADDRESS':
                 contact_info['address'].append(entity['Text'])
