@@ -65,9 +65,9 @@ def save_contact():
             logging.error(ce)
             return "Bad Request"
 
-    contact_id = "contact_" + str(uuid.uuid1())
-
-    request_data["contact_id"] = contact_id
+    if "contact_id" not in request_data.keys():
+        contact_id = "contact_" + str(uuid.uuid1())
+        request_data["contact_id"] = contact_id
 
     for i in request_data.keys():
         if type(request_data[i]) is list:
@@ -77,7 +77,7 @@ def save_contact():
 
     contact = contact_store.save_contact(request_data)
 
-    return request_data
+    return contact
 
 
 @app.route('/contacts/find', methods=['POST'], cors=True)
@@ -184,10 +184,10 @@ def login():
         if passowrd_given != user["password"]:
             return "Please provide correct password"
         else:
-            return {"user_id": user["id"], "message": "Login Success", "user_firstname": user["firstname"]}
+            return {"user_id": user["id"],"role":user['role'], "message": "Login Success", "user_firstname": user["firstname"]}
 
 
-@app.route("/get-all-data", methods=["POST"])
+@app.route("/get-all-data", methods=["POST"],cors=True)
 def get_all_data():
     try:
         request_data = json.loads(app.current_request.raw_body)
