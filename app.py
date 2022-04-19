@@ -68,7 +68,7 @@ def save_contact():
 
     contact = contact_store.save_contact(request_data)
 
-    return request_data
+    return contact
 
 
 @app.route('/contacts/find', methods=['POST'], cors=True)
